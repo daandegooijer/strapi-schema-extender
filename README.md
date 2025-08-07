@@ -1,4 +1,4 @@
-# strapi-schema-extender
+# Strapi Schema Extender
 
 A Strapi plugin to **extend your content-type schemas** with layout and metadata fields, enabling schema-driven control over the Strapi Content Manager UI.
 
