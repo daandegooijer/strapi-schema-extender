@@ -1,4 +1,4 @@
-# strapi-schema-extender
+# Strapi Schema Extender
 
 A Strapi plugin to **extend your content-type schemas** with layout and metadata fields, enabling schema-driven control over the Strapi Content Manager UI.
 
@@ -124,9 +124,31 @@ Add `layouts`, `metadatas`, and a `content-manager` block to your content-type s
 
 ## Installation
 
-1. Place this plugin in your Strapi project's `plugins` directory.
-2. Add `layouts`, `metadatas`, and a `content-manager` block to your schema as shown above.
-3. Restart Strapi.
+1. Run the npm install command `npm install strapi-schema-extender`
+2. Enable the plugin in your plugins.ts:
+
+```json
+ "strapi-schema-extender": {
+    "enabled": true,
+ }
+```
+
+3. Add `layouts`, `metadatas`, and a `content-manager` block to your schema as shown above.
+4. Restart Strapi.
+
+---
+
+## 👏 Support My Work
+
+Hey there! I'm actively maintaining this project on my free time, and if you've found it useful, I'd greatly appreciate
+your support. Donations will help cover hosting costs, tools, and allow me to dedicate additional time for updates,
+features, and bug fixes.
+
+You can contribute by donating through this link:
+
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate/?business=DFMEGWFQUZHCQ&no_recurring=0&currency_code=EUR)
+
+I’d be forever grateful for your generosity. Thank you for helping keep this project alive and growing! ❤️
 
 ---
 

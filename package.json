@@ -1,5 +1,6 @@
 {
-  "version": "0.0.0",
+  "displayName": "Strapi Schema Extender",
+  "version": "1.0.0",
   "keywords": [],
   "type": "commonjs",
   "exports": {
