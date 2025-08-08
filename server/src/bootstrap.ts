@@ -1,18 +1,23 @@
-//@ts-nocheck
+import { AttributeConfig, ContentType, Layouts, Metadatas, ContentManagerConfig } from './types';
+
 const allowedListKeys = ['label', 'searchable', 'sortable', 'mainField'];
 const allowedEditKeys = ['label', 'description', 'placeholder', 'visible', 'editable', 'mainField'];
 
 /**
  * Filters an object to only include allowed keys.
  */
-function filterKeys(obj, allowed) {
-  return Object.fromEntries(Object.entries(obj).filter(([k]) => allowed.includes(k)));
+function filterKeys<T extends object>(obj: T, allowed: string[]): Partial<T> {
+  return Object.fromEntries(Object.entries(obj).filter(([k]) => allowed.includes(k))) as Partial<T>;
 }
 
 /**
  * Updates the size of a field in layouts.edit if defined in the schema.
  */
-function updateEditLayoutSize(editLayout, attr, size) {
+function updateEditLayoutSize(
+  editLayout: Array<Array<{ name: string; size: number }>>,
+  attr: string,
+  size: number
+): Array<Array<{ name: string; size: number }>> {
   return editLayout.map((row) =>
     row.map((field) => (field.name === attr ? { ...field, size } : field))
   );
@@ -21,7 +26,9 @@ function updateEditLayoutSize(editLayout, attr, size) {
 /**
  * Sorts the edit layout fields by their position defined in the schema.
  */
-function buildEditLayoutFromSchema(attributes) {
+function buildEditLayoutFromSchema(
+  attributes: Record<string, AttributeConfig>
+): Array<Array<{ name: string; size: number }>> {
   const fields = Object.entries(attributes)
     .filter(([_, config]) => !config.layouts?.hidden)
     .map(([name, config]) => ({
@@ -38,7 +45,11 @@ function buildEditLayoutFromSchema(attributes) {
 /**
  * Updates the metadatas for a given attribute based on schema config.
  */
-function updateMetadatas(existingMetadatas, attr, config) {
+function updateMetadatas(
+  existingMetadatas: Metadatas,
+  attr: string,
+  config: AttributeConfig
+): Metadatas {
   if (!existingMetadatas[attr]) existingMetadatas[attr] = { edit: {}, list: {} };
 
   if (config.metadatas) {
@@ -58,8 +69,8 @@ function updateMetadatas(existingMetadatas, attr, config) {
   return existingMetadatas;
 }
 
-const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
-  const contentTypes = Object.values(strapi.contentTypes);
+const bootstrap = async ({ strapi }: { strapi: any }) => {
+  const contentTypes: ContentType[] = Object.values(strapi.contentTypes);
 
   for (const ct of contentTypes) {
     if (ct.plugin) continue;
@@ -70,20 +81,20 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
       key: `content_types::${ct.uid}`,
     });
 
-    const existing = await store.get();
+    const existing: ContentManagerConfig | undefined = await store.get();
 
     if (!existing) {
       continue;
     }
 
-    const updated = JSON.parse(JSON.stringify(existing));
+    const updated: ContentManagerConfig = JSON.parse(JSON.stringify(existing));
 
     for (const [attr, config] of Object.entries(ct.attributes)) {
       if (config.layouts?.size) {
         updated.layouts.edit = updateEditLayoutSize(
           updated.layouts.edit,
           attr,
-          config.layouts.size
+          config.layouts.size!
         );
       }
 
